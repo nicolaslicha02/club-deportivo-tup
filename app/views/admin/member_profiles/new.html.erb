@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-4">Alta de Nuevo Socio</h3>
+
+        <!-- Bloque para mostrar errores de validación en rojo -->
+        <% if @profile.errors.any? %>
+          <div class="alert alert-danger">
+            <ul class="mb-0">
+              <% @profile.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <%= form_with(model: [:admin, @profile], local: true) do |form| %>
+          <div class="mb-3">
+            <%= form.label :first_name, "Nombre", class: "form-label" %>
+            <%= form.text_field :first_name, class: "form-control", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :last_name, "Apellido", class: "form-label" %>
+            <%= form.text_field :last_name, class: "form-control", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :dni, "DNI", class: "form-label" %>
+            <%= form.text_field :dni, class: "form-control", required: true %>
+          </div>
+
+          <!-- Campo agregado: Fecha de Nacimiento -->
+          <div class="mb-3">
+            <%= form.label :birth_date, "Fecha de Nacimiento", class: "form-label" %>
+            <%= form.date_field :birth_date, class: "form-control", required: true %>
+          </div>
+
+          <!-- Campo agregado: Número de Socio -->
+          <div class="mb-3">
+            <%= form.label :member_number, "Número de Socio (Ej: SOC-0002)", class: "form-label" %>
+            <%= form.text_field :member_number, class: "form-control", required: true %>
+          </div>
+
+          <div class="mb-4">
+            <%= form.label :avatar, "Foto de Perfil (Carnet)", class: "form-label fw-bold" %>
+            <%= form.file_field :avatar, class: "form-control", accept: "image/*" %>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "Registrar Socio", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

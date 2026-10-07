@@ -1,0 +1,26 @@
+<h3 class="mb-4">Actividades Disponibles</h3>
+
+<div class="row">
+  <% if @available_activities.any? %>
+    <% @available_activities.each do |activity| %>
+      <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= activity.name %></h5>
+            <p class="card-text text-muted small"><%= activity.description %></p>
+            <p class="card-text fw-bold">Costo adicional: $<%= activity.monthly_fee %></p>
+          </div>
+          <div class="card-footer bg-white border-0">
+            <%= button_to "Inscribirme", enroll_portal_activity_path(activity), method: :post, class: "btn btn-primary w-100", data: { turbo: false } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="col-12">
+      <div class="alert alert-info">Actualmente estás inscripto en todas las actividades disponibles.</div>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "Volver al Panel", portal_dashboard_path, class: "btn btn-outline-secondary mt-3" %>

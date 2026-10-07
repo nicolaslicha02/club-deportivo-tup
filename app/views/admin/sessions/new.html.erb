@@ -1,0 +1,18 @@
+<h2>Ingreso al Back-office</h2>
+
+<div style="color: red;"><%= flash[:alert] %></div>
+<div style="color: green;"><%= flash[:notice] %></div>
+
+<%= form_with url: admin_login_path, method: :post, data: { turbo: false } do |f| %>
+  <div style="margin-bottom: 10px;">
+    <%= f.label :email, "Correo electrónico" %><br>
+    <%= f.email_field :email, required: true %>
+  </div>
+
+  <div style="margin-bottom: 10px;">
+    <%= f.label :password, "Contraseña" %><br>
+    <%= f.password_field :password, required: true %>
+  </div>
+
+  <%= f.submit "Iniciar Sesión" %>
+<% end %>

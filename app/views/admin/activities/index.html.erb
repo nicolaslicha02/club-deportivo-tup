@@ -1,0 +1,27 @@
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2>Gestión de Actividades</h2>
+  <%= button_to "Cerrar Sesión", admin_logout_path, method: :delete %>
+</div>
+
+<table border="1" style="width: 100%; text-align: left; margin-top: 20px;">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Cuota</th>
+      <th>Cupo</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @activities.each do |activity| %>
+      <tr>
+        <td><%= activity.name %></td>
+        <td><%= activity.description %></td>
+        <td>$<%= activity.monthly_fee %></td>
+        <td><%= activity.capacity %></td>
+        <td><%= activity.active ? 'Activa' : 'Inactiva' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

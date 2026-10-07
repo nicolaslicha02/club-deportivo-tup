@@ -1,0 +1,28 @@
+<div class="row mt-4">
+  <div class="col-md-6 offset-md-3">
+    <div class="card shadow-sm border-primary">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">⚙️ Configuración Global del Club</h4>
+      </div>
+      <div class="card-body">
+        <p class="text-muted small mb-4">
+          Modificar la cuota base afectará únicamente a los cobros que se generen a partir de este momento. Las cuotas ya emitidas mantendrán su valor histórico.
+        </p>
+
+        <%= form_with(model: [:admin, @setting], local: true) do |form| %>
+          <div class="mb-4">
+            <%= form.label :base_fee, "Valor de la Cuota Social Base ($)", class: "form-label fw-bold" %>
+            <div class="input-group">
+              <span class="input-group-text bg-light">$</span>
+              <%= form.number_field :base_fee, class: "form-control form-control-lg text-end", step: "0.01", required: true %>
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "Guardar Cambios", class: "btn btn-success btn-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
