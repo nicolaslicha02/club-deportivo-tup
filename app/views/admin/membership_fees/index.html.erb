@@ -54,11 +54,14 @@
               <div class="small text-muted">Vence <%= l(fee.due_date, format: "%d/%m/%Y") if fee.due_date %></div>
             </td>
             <td>
-              <% case fee.status %>
-              <% when "pending" %><span class="admin-status status-pending">Esperando pago</span>
-              <% when "under_review" %><span class="admin-status status-review">A revisar</span>
-              <% when "approved" %><span class="admin-status status-approved">Aprobada</span>
-              <% when "rejected" %><span class="admin-status status-rejected">Rechazada</span>
+              <% if fee.pending? %>
+                <span class="admin-status status-pending">Esperando pago</span>
+              <% elsif fee.under_review? %>
+                <span class="admin-status status-review">A revisar</span>
+              <% elsif fee.approved? %>
+                <span class="admin-status status-approved">Aprobada</span>
+              <% elsif fee.rejected? %>
+                <span class="admin-status status-rejected">Rechazada</span>
               <% end %>
             </td>
             <td>

@@ -1,84 +1,105 @@
-<div class="row">
-  <div class="col-md-12">
-    <h2 class="mb-4">Bienvenido, <%= @profile.first_name %> <%= @profile.last_name %></h2>
+<section class="member-welcome">
+  <div>
+    <p class="member-eyebrow">MI ESPACIO EN EL CLUB</p>
+    <h1>Hola, <%= @profile.first_name %> <%= @profile.last_name %></h1>
+    <p>Consultá tus actividades, cuotas y comprobantes desde un solo lugar.</p>
   </div>
+  <div class="member-id-card"><span>Número de socio</span><strong><%= @profile.member_number %></strong><small><%= @profile.status&.humanize || "Socio" %></small></div>
+</section>
+
+<div class="member-quick-actions">
+  <%= link_to portal_activities_path, class: "member-action-card" do %>
+    <span class="member-action-icon">＋</span><span><strong>Explorar actividades</strong><small>Sumate a una nueva disciplina</small></span><b>→</b>
+  <% end %>
+  <%= link_to "#member-fees", class: "member-action-card" do %>
+    <span class="member-action-icon">$</span><span><strong>Ver mis cuotas</strong><small>Revisá importes y vencimientos</small></span><b>→</b>
+  <% end %>
+  <%= link_to "#member-activities", class: "member-action-card" do %>
+    <span class="member-action-icon">✓</span><span><strong>Mis actividades</strong><small><%= pluralize(@activities.size, "actividad", "actividades") %> inscripta(s)</small></span><b>→</b>
+  <% end %>
 </div>
 
-<div class="row">
-  <div class="col-md-6">
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Mis Datos</h5>
-      </div>
-      <div class="card-body">
-        <p class="mb-1"><strong>N° de Socio:</strong> <%= @profile.member_number %></p>
-        <p class="mb-0"><strong>DNI:</strong> <%= @profile.dni %></p>
-      </div>
-    </div>
-
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header bg-info text-white">
-        <h5 class="mb-0">Mis Actividades</h5>
-      </div>
-      <ul class="list-group list-group-flush">
-        <% if @activities.any? %>
-          <% @activities.each do |activity| %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <%= activity.name %>
-              <span class="badge bg-secondary rounded-pill">$<%= activity.monthly_fee %></span>
-            </li>
-          <% end %>
-        <% elsif @fees_under_review.any? %>
-          <div class="alert alert-info mb-0">
-            <strong>Comprobantes en revisión.</strong> Te avisaremos cuando el club confirme el pago.
-            <ul class="mb-0 mt-2">
-              <% @fees_under_review.each do |fee| %>
-                <li>Cuota con vencimiento <%= fee.due_date.strftime("%d/%m/%Y") if fee.due_date %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% else %>
-          <li class="list-group-item text-muted">No estás inscripto en ninguna actividad.</li>
-        <% end %>
-      </ul>
-      <div class="card-footer bg-white border-0">
-        <%= link_to "Inscribirse a nuevas actividades", portal_activities_path, class: "btn btn-outline-info btn-sm w-100" %>
-      </div>
-    </div>
+<% if @fees_under_review.any? %>
+  <div class="member-notice member-notice-info">
+    <strong>Estamos revisando tu pago.</strong>
+    <% if @fees_under_review.one? %>
+      Tu comprobante está recibido. Te avisaremos cuando el club lo resuelva.
+    <% else %>
+      Tenés <%= @fees_under_review.size %> comprobantes en revisión. Te avisaremos cuando el club los resuelva.
+    <% end %>
   </div>
+<% end %>
 
-  <div class="col-md-6">
-    <div class="card shadow-sm border-warning">
-      <div class="card-header bg-warning text-dark">
-        <h5 class="mb-0">Estado de Cuenta</h5>
-      </div>
-      <div class="card-body">
-        <% if @pending_fees.any? %>
-          <h6 class="text-muted border-bottom pb-2 mb-3">Cuotas Pendientes</h6>
-          <% @pending_fees.each do |fee| %>
-            <%= form_with(model: fee, url: portal_membership_fee_path(fee), method: :patch, local: true, html: { multipart: true }) do |f| %>
-              <div class="mb-3 p-3 bg-light rounded border">
-                <% if fee.rejected? %>
-                  <div class="alert alert-danger py-2 small">
-                    <strong>Comprobante rechazado.</strong> <%= fee.review_note %>
-                    <div class="mt-1">Subí una versión corregida para que podamos revisarlo otra vez.</div>
-                  </div>
-                <% end %>
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span>Vencimiento: <strong><%= fee.due_date.strftime("%d/%m/%Y") if fee.due_date %></strong></span>
-                  <span class="fs-5 fw-bold text-danger">$<%= fee.amount %></span>
-                </div>
-                <%= f.file_field :receipt, class: "form-control form-control-sm mb-2", required: true, accept: "image/png, image/jpeg, application/pdf" %>
-                <%= f.submit(fee.rejected? ? "Reenviar comprobante" : "Enviar comprobante para revisión", class: "btn btn-sm btn-success w-100") %>
-              </div>
+<% if @pending_fees.any? %>
+  <section class="member-section" id="member-fees">
+    <div class="member-section-heading">
+      <div><p class="member-eyebrow">CUOTAS</p><h2>Acciones pendientes</h2><p>Descargá el cupón mensual o enviá el comprobante.</p></div>
+      <span class="member-count-pill"><%= @pending_fees.size %> pendiente(s)</span>
+    </div>
+
+    <div class="member-fee-grid">
+      <% @pending_fees.each do |fee| %>
+        <article class="member-fee-card <%= 'member-fee-rejected' if fee.rejected? %>">
+          <div class="member-fee-card-top">
+            <span class="member-status <%= fee.rejected? ? 'member-status-rejected' : 'member-status-pending' %>"><%= fee.rejected? ? 'Requiere corrección' : 'Pendiente de pago' %></span>
+            <span class="member-fee-period"><%= fee.due_date&.strftime("%m/%Y") || fee.period || "Cuota mensual" %></span>
+          </div>
+          <div class="member-fee-total"><small>Total de esta cuota</small><strong><%= number_to_currency(fee.amount, unit: "$", precision: 2, delimiter: ".", separator: ",") %></strong></div>
+          <% if fee.rejected? %>
+            <div class="member-rejection-note"><strong>Motivo informado por el club</strong><p><%= fee.review_note %></p></div>
+          <% end %>
+          <div class="member-fee-actions">
+            <%= link_to "Ver cupón", coupon_portal_membership_fee_path(fee), class: "member-secondary-button" %>
+            <%= form_with(model: fee, url: portal_membership_fee_path(fee), method: :patch, local: true, html: { multipart: true, class: "member-upload-form" }) do |form| %>
+              <%= form.label :receipt, fee.rejected? ? "Adjuntar comprobante corregido" : "Adjuntar comprobante", class: "form-label" %>
+              <%= form.file_field :receipt, class: "form-control", required: true, accept: "image/png,image/jpeg,application/pdf" %>
+              <%= form.submit(fee.rejected? ? "Reenviar para revisión" : "Enviar para revisión", class: "member-primary-button w-100") %>
             <% end %>
-          <% end %>
-        <% else %>
-          <div class="alert alert-success mb-0">
-            ¡Estás al día con tus cuotas!
           </div>
+          <% if fee.due_date %><small class="member-due-date">Vencimiento: <%= l(fee.due_date, format: "%d/%m/%Y") %></small><% end %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+<% elsif @fees_under_review.empty? %>
+  <div class="member-notice member-notice-success"><strong>¡Estás al día!</strong> No tenés cuotas pendientes de pago.</div>
+<% end %>
+
+<div class="member-content-grid">
+  <section class="member-section" id="member-activities">
+    <div class="member-section-heading">
+      <div><p class="member-eyebrow">TU CLUB</p><h2>Mis actividades</h2><p>Disciplinas en las que estás inscripto.</p></div>
+      <%= link_to "Explorar", portal_activities_path, class: "member-text-link" %>
+    </div>
+    <% if @activities.any? %>
+      <div class="member-activity-list">
+        <% @activities.each do |activity| %>
+          <article class="member-activity-row">
+            <span class="member-activity-mark"><%= activity.name.first.upcase %></span>
+            <span class="member-activity-copy"><strong><%= activity.name %></strong><small><%= activity.description.presence || "Actividad del club" %></small></span>
+            <strong class="member-activity-price"><%= number_to_currency(activity.monthly_fee, unit: "$", precision: 0, delimiter: ".") %><small>/ mes</small></strong>
+          </article>
         <% end %>
       </div>
-    </div>
-  </div>
+    <% else %>
+      <div class="member-empty-state"><strong>Todavía no tenés actividades</strong><p>Explorá las propuestas disponibles y encontrá una para vos.</p><%= link_to "Ver actividades", portal_activities_path, class: "member-primary-button" %></div>
+    <% end %>
+  </section>
+
+  <section class="member-section">
+    <div class="member-section-heading"><div><p class="member-eyebrow">HISTORIAL</p><h2>Mis cuotas</h2><p>Cupones y estados de tus últimos meses.</p></div></div>
+    <% if @recent_fees.any? %>
+      <div class="member-history-list">
+        <% @recent_fees.each do |fee| %>
+          <article class="member-history-row">
+            <span><strong><%= fee.due_date&.strftime("%m/%Y") || fee.period || "Cuota mensual" %></strong><small><%= number_to_currency(fee.amount, unit: "$", precision: 2, delimiter: ".", separator: ",") %></small></span>
+            <span class="member-status <%= fee.approved? ? 'member-status-approved' : (fee.under_review? ? 'member-status-review' : (fee.rejected? ? 'member-status-rejected' : 'member-status-pending')) %>"><%= fee.approved? ? "Aprobada" : (fee.under_review? ? "En revisión" : (fee.rejected? ? "Rechazada" : "Pendiente")) %></span>
+            <%= link_to "Cupón", coupon_portal_membership_fee_path(fee), class: "member-coupon-link" %>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="member-empty-state"><strong>Tu historial aparecerá acá</strong><p>Cuando se genere tu primera cuota vas a poder consultar su cupón y estado.</p></div>
+    <% end %>
+  </section>
 </div>

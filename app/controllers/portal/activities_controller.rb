@@ -19,9 +19,7 @@ class Portal::ActivitiesController < ApplicationController
     cuota_pendiente = perfil.membership_fees.find_by(status: "pending")
 
     if cuota_pendiente
-      # Si ya tiene una cuota sin pagar, recalcula el total (Base + Todas sus actividades)
-      nuevo_total = ClubSetting.current.base_fee + perfil.activities.sum(:monthly_fee)
-      cuota_pendiente.update(amount: nuevo_total)
+      cuota_pendiente.recalculate_amount!
     else
       # Si estaba al día, le genera una nueva cuota para el mes actual
       MembershipFee.create!(

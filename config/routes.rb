@@ -13,7 +13,11 @@ Rails.application.routes.draw do
       post "enroll", on: :member
     end
 
-    resources :membership_fees, only: [ :update ]
+    resources :membership_fees, only: [ :update ] do
+      member do
+        get :coupon
+      end
+    end
   end
 
   namespace :admin do

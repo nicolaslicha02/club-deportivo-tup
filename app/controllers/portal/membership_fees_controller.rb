@@ -1,4 +1,10 @@
 class Portal::MembershipFeesController < ApplicationController
+  def coupon
+    @profile = current_user.member_profile
+    @fee = @profile.membership_fees.find(params[:id])
+    @breakdown_items = @fee.fee_breakdown_items
+  end
+
   def update
     fee = current_user.member_profile.membership_fees.find(params[:id])
     upload = membership_fee_params[:receipt]

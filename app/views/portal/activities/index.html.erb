@@ -1,27 +1,25 @@
-<h3 class="mb-4">Actividades Disponibles</h3>
+<section class="member-section member-activities-page">
+  <div class="member-section-heading">
+    <div><p class="member-eyebrow">SUMATE AL CLUB</p><h1>Actividades disponibles</h1><p>Encontrá una propuesta para vos. El importe se suma a tu cuota mensual.</p></div>
+    <%= link_to "← Mi panel", portal_dashboard_path, class: "member-text-link" %>
+  </div>
 
-<div class="row">
   <% if @available_activities.any? %>
-    <% @available_activities.each do |activity| %>
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body">
-            <h5 class="card-title"><%= activity.name %></h5>
-            <p class="card-text text-muted small"><%= activity.description %></p>
-            <p class="card-text fw-bold">Costo adicional: $<%= activity.monthly_fee %></p>
-            <p class="card-text"><%= activity.available_spots %> cupos disponibles</p>
+    <div class="member-available-grid">
+      <% @available_activities.each do |activity| %>
+        <article class="member-available-card">
+          <div class="member-available-mark"><%= activity.name.first.upcase %></div>
+          <h2><%= activity.name %></h2>
+          <p><%= activity.description.presence || "Consultá con el club para conocer los detalles de esta actividad." %></p>
+          <div class="member-available-meta">
+            <span><small>Adicional mensual</small><strong><%= number_to_currency(activity.monthly_fee, unit: "$", precision: 0, delimiter: ".") %></strong></span>
+            <span><small>Cupos disponibles</small><strong><%= activity.available_spots %></strong></span>
           </div>
-          <div class="card-footer bg-white border-0">
-            <%= button_to "Inscribirme", enroll_portal_activity_path(activity), method: :post, class: "btn btn-primary w-100", data: { turbo: false } %>
-          </div>
-        </div>
-      </div>
-    <% end %>
-  <% else %>
-    <div class="col-12">
-      <div class="alert alert-info">Actualmente estás inscripto en todas las actividades disponibles.</div>
+          <%= button_to "Inscribirme", enroll_portal_activity_path(activity), method: :post, class: "member-primary-button w-100", data: { turbo: false } %>
+        </article>
+      <% end %>
     </div>
+  <% else %>
+    <div class="member-empty-state"><strong>Por ahora no hay actividades disponibles</strong><p>Ya estás inscripto en todas las actividades activas con cupo.</p><%= link_to "Volver a mi panel", portal_dashboard_path, class: "member-primary-button" %></div>
   <% end %>
-</div>
-
-<%= link_to "Volver al Panel", portal_dashboard_path, class: "btn btn-outline-secondary mt-3" %>
+</section>

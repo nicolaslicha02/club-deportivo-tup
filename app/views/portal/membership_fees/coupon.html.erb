@@ -1,0 +1,44 @@
+<% content_for :title, "Cupón mensual · Club Deportivo" %>
+
+<div class="member-coupon-page">
+  <div class="member-coupon-toolbar no-print">
+    <%= link_to "← Volver al portal", portal_dashboard_path, class: "member-secondary-link" %>
+    <button type="button" class="member-primary-button" onclick="window.print()">Imprimir / Guardar como PDF</button>
+  </div>
+
+  <article class="member-coupon">
+    <header class="member-coupon-header">
+      <div>
+        <p class="member-coupon-eyebrow">CLUB DEPORTIVO · CUOTA SOCIAL</p>
+        <h1>Cupón mensual</h1>
+      </div>
+      <span class="member-coupon-reference">N.º <%= @fee.id.to_s.rjust(6, "0") %></span>
+    </header>
+
+    <div class="member-coupon-member">
+      <div><span>Socio</span><strong><%= @profile.first_name %> <%= @profile.last_name %></strong></div>
+      <div><span>Número de socio</span><strong><%= @profile.member_number %></strong></div>
+      <div><span>Período</span><strong><%= @fee.due_date&.strftime("%m/%Y") || @fee.period || "Mensual" %></strong></div>
+      <div><span>Vencimiento</span><strong><%= l(@fee.due_date, format: "%d/%m/%Y") if @fee.due_date %></strong></div>
+    </div>
+
+    <section class="member-coupon-details">
+      <h2>Detalle de la cuota</h2>
+      <% @breakdown_items.each do |item| %>
+        <div class="member-coupon-line">
+          <span><%= item["label"] %></span>
+          <strong><%= number_to_currency(item["amount"], unit: "$", precision: 2, delimiter: ".", separator: ",") %></strong>
+        </div>
+      <% end %>
+      <div class="member-coupon-total">
+        <span>Total a pagar</span>
+        <strong><%= number_to_currency(@fee.amount, unit: "$", precision: 2, delimiter: ".", separator: ",") %></strong>
+      </div>
+    </section>
+
+    <footer class="member-coupon-footer">
+      <p>Este cupón resume los conceptos de la cuota. El pago se confirma cuando el club revisa y aprueba el comprobante.</p>
+      <span>Socio: <%= @profile.member_number %> · Cupón: <%= @fee.id.to_s.rjust(6, "0") %></span>
+    </footer>
+  </article>
+</div>

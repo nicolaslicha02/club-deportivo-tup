@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_07_134721) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_07_134723) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -84,8 +84,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_07_134721) do
     t.decimal "amount"
     t.datetime "created_at", null: false
     t.date "due_date"
+    t.text "fee_breakdown"
     t.integer "member_profile_id", null: false
     t.string "period"
+    t.text "review_note"
+    t.datetime "reviewed_at"
     t.integer "status"
     t.datetime "updated_at", null: false
     t.index ["member_profile_id"], name: "index_membership_fees_on_member_profile_id"

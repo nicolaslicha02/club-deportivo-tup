@@ -43,12 +43,18 @@
       </nav>
 
     <% elsif request.path.start_with?('/portal') %>
-      <!-- Barra del Portal de Socios -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="/portal/dashboard">Mi Club</a>
-          <div class="d-flex">
-            <%= button_to "Cerrar Sesión", logout_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
+      <nav class="member-navbar">
+        <div class="container member-navbar-inner">
+          <%= link_to portal_dashboard_path, class: "member-brand" do %>
+            <span class="member-brand-mark">CD</span><span><strong>Club Deportivo</strong><small>Portal de socios</small></span>
+          <% end %>
+          <div class="member-nav-links">
+            <%= link_to "Mi panel", portal_dashboard_path, class: (request.path == portal_dashboard_path ? "active" : nil) %>
+            <%= link_to "Actividades", portal_activities_path, class: (request.path.start_with?(portal_activities_path) ? "active" : nil) %>
+          </div>
+          <div class="member-nav-account">
+            <span><%= current_user&.email %></span>
+            <%= button_to "Salir", logout_path, method: :delete, class: "member-logout" %>
           </div>
         </div>
       </nav>
@@ -69,14 +75,14 @@
     <main class="<%= request.path.start_with?('/admin') && request.path != '/admin/login' ? 'container-fluid admin-main' : 'container mt-4' %>">
       <!-- Sistema de mensajes flash globales -->
       <% if flash[:notice] %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show <%= 'no-print' if request.path.start_with?('/portal/membership_fees/') && request.path.end_with?('/coupon') %>" role="alert">
           <%= flash[:notice] %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       <% end %>
       
       <% if flash[:alert] %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show <%= 'no-print' if request.path.start_with?('/portal/membership_fees/') && request.path.end_with?('/coupon') %>" role="alert">
           <%= flash[:alert] %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
