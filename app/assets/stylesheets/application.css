@@ -8,3 +8,68 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Club admin */
+:root { --club-ink: #17263c; --club-muted: #718096; --club-line: #e5ebf2; --club-blue: #2864dc; --club-bg: #f4f7fb; }
+body { background: var(--club-bg); color: var(--club-ink); }
+.admin-navbar { background: #14243a; color: #fff; box-shadow: 0 4px 18px #14243a1a; }
+.admin-navbar-inner { max-width: 1440px; min-height: 72px; margin: auto; padding: 12px 28px; display: flex; align-items: center; gap: 32px; }
+.admin-brand { color: #fff; font-size: 18px; font-weight: 800; letter-spacing: -.03em; text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+.admin-brand:hover { color: #fff; }
+.admin-brand-mark { display: grid; place-items: center; width: 38px; height: 38px; background: #3978ed; border-radius: 12px; font-size: 13px; }
+.admin-brand strong, .admin-brand small { display: block; }
+.admin-brand small { color: #9cadc3; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+.admin-nav-links { display: flex; align-items: center; gap: 8px; flex: 1; }
+.admin-nav-links a, .admin-logout { color: #c9d4e3; text-decoration: none; border: 0; background: transparent; padding: 10px 13px; border-radius: 9px; font: inherit; }
+.admin-nav-links a:hover, .admin-nav-links a.active, .admin-logout:hover { color: white; background: #ffffff18; }
+.admin-nav-account { color: #d9e2ef; font-size: 12px; white-space: nowrap; display: flex; align-items: center; gap: 12px; }
+.admin-main { max-width: 1440px; margin: 0 auto; padding: 36px 28px 64px; }
+.admin-page-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 0 26px; }
+.admin-page-heading h1 { margin: 0; font-size: clamp(28px, 4vw, 36px); letter-spacing: -.04em; }
+.admin-eyebrow { color: var(--club-blue); font-size: 11px; font-weight: 800; letter-spacing: .12em; margin: 0 0 8px; }
+.admin-subtitle { margin: 8px 0 0; color: var(--club-muted); }
+.admin-stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
+.admin-stat-card, .admin-activity-card, .admin-panel { background: #fff; border: 1px solid var(--club-line); border-radius: 16px; box-shadow: 0 5px 18px #18315308; }
+.admin-stat-card { padding: 20px 22px; display: grid; gap: 5px; }
+.admin-stat-card span, .admin-stat-card small { color: var(--club-muted); font-size: 13px; }
+.admin-stat-card strong { font-size: 30px; letter-spacing: -.04em; }
+.admin-activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+.admin-activity-card { padding: 20px; }
+.admin-activity-topline, .admin-capacity-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.admin-activity-card h2 { margin: 17px 0 7px; font-size: 20px; }
+.admin-activity-price { font-weight: 800; }
+.admin-activity-price small { color: var(--club-muted); font-size: 12px; font-weight: 500; }
+.admin-activity-description { min-height: 42px; color: var(--club-muted); line-height: 1.5; }
+.admin-capacity-row { margin: 20px 0 8px; font-size: 13px; color: var(--club-muted); }
+.admin-capacity-row strong { color: var(--club-ink); }
+.admin-progress { height: 7px; background: #edf1f6; border-radius: 10px; overflow: hidden; }
+.admin-progress span { display: block; height: 100%; background: linear-gradient(90deg, #3978ed, #61a1fa); border-radius: inherit; }
+.admin-enrolled-list { margin-top: 18px; border-top: 1px solid var(--club-line); padding-top: 14px; }
+.admin-enrolled-list summary { cursor: pointer; font-weight: 700; font-size: 13px; list-style-position: inside; }
+.admin-enrolled-list summary span { float: right; color: var(--club-blue); }
+.admin-enrolled-list ul { list-style: none; margin: 10px 0 0; padding: 0; }
+.admin-enrolled-list li { display: grid; gap: 3px; padding: 10px 0; border-bottom: 1px solid #f0f3f7; }
+.admin-enrolled-list li small, .admin-empty-inline { color: var(--club-muted); font-size: 12px; }
+.admin-status { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.status-approved { color: #13734b; background: #e7f7ef; }
+.status-pending { color: #97620a; background: #fff5d8; }
+.status-under-review, .status-review { color: #2357b8; background: #eaf1ff; }
+.status-rejected { color: #b33d45; background: #fff0f0; }
+.status-muted { color: #687589; background: #eef1f5; }
+.admin-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.admin-filter-bar a { color: #536176; text-decoration: none; background: #fff; border: 1px solid var(--club-line); padding: 8px 13px; border-radius: 999px; font-size: 13px; }
+.admin-filter-bar a.active, .admin-filter-bar a:hover { color: #fff; background: var(--club-blue); border-color: var(--club-blue); }
+.admin-panel { overflow: hidden; }
+.admin-table { width: 100%; border-collapse: collapse; background: #fff; }
+.admin-table th { text-align: left; color: var(--club-muted); text-transform: uppercase; letter-spacing: .06em; font-size: 10px; padding: 14px 16px; background: #f9fbfd; }
+.admin-table td { vertical-align: top; padding: 16px; border-top: 1px solid var(--club-line); font-size: 13px; }
+.admin-table td small { display: block; color: var(--club-muted); margin-top: 4px; }
+.admin-review-form { min-width: 210px; display: grid; gap: 8px; }
+.admin-review-form textarea { min-height: 64px; resize: vertical; }
+.admin-review-actions { display: flex; gap: 7px; }
+.admin-review-actions button, .admin-button { border: 0; border-radius: 8px; padding: 8px 11px; color: white; background: var(--club-blue); font-weight: 700; cursor: pointer; }
+.admin-review-actions .button-reject { color: #a52f3c; background: #fff0f0; }
+.admin-heading-icon { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 16px; background: #eaf1ff; color: var(--club-blue); font-size: 24px; font-weight: 800; }
+.admin-card { border: 1px solid var(--club-line); border-radius: 16px; box-shadow: 0 5px 18px #18315308; }
+.admin-stat-label { font-weight: 600; }
+@media (max-width: 760px) { .admin-navbar-inner { flex-wrap: wrap; gap: 8px 16px; padding: 14px 18px; } .admin-nav-links { order: 3; flex-basis: 100%; overflow-x: auto; } .admin-nav-account { margin-left: auto; } .admin-main { padding: 26px 16px 48px; } .admin-stats-grid { grid-template-columns: 1fr; } .admin-panel, .admin-card { overflow-x: auto; } .admin-table { min-width: 760px; } }

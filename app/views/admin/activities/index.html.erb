@@ -1,27 +1,44 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <h2>Gestión de Actividades</h2>
-  <%= button_to "Cerrar Sesión", admin_logout_path, method: :delete %>
+<section class="admin-page-heading">
+  <div>
+    <p class="admin-eyebrow">GESTIÓN DEL CLUB</p>
+    <h1>Actividades</h1>
+    <p class="admin-subtitle">Revisa la oferta del club, los cupos y los socios inscriptos.</p>
+  </div>
+</section>
+
+<div class="admin-stats-grid">
+  <article class="admin-stat-card"><span>Actividades</span><strong><%= @activities.size %></strong><small>En el catálogo del club</small></article>
+  <article class="admin-stat-card"><span>Activas</span><strong><%= @activities.count(&:active?) %></strong><small>Disponibles para socios</small></article>
+  <article class="admin-stat-card"><span>Socios inscriptos</span><strong><%= @activities.sum { |activity| activity.enrollments.size } %></strong><small>En todas las actividades</small></article>
 </div>
 
-<table border="1" style="width: 100%; text-align: left; margin-top: 20px;">
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Descripción</th>
-      <th>Cuota</th>
-      <th>Cupo</th>
-      <th>Estado</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @activities.each do |activity| %>
-      <tr>
-        <td><%= activity.name %></td>
-        <td><%= activity.description %></td>
-        <td>$<%= activity.monthly_fee %></td>
-        <td><%= activity.capacity %></td>
-        <td><%= activity.active ? 'Activa' : 'Inactiva' %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="admin-activities-grid">
+  <% @activities.each do |activity| %>
+    <% enrolled = activity.enrollments.size %>
+    <% capacity = activity.capacity.to_i %>
+    <% occupancy = capacity.positive? ? [(enrolled.to_f / capacity * 100).round, 100].min : 0 %>
+    <article class="admin-activity-card">
+      <div class="admin-activity-topline">
+        <span class="admin-status <%= activity.active? ? 'status-approved' : 'status-muted' %>"><%= activity.active? ? 'Activa' : 'Inactiva' %></span>
+        <span class="admin-activity-price"><%= number_to_currency(activity.monthly_fee, unit: '$', precision: 0) %><small> / mes</small></span>
+      </div>
+      <h2><%= activity.name %></h2>
+      <p class="admin-activity-description"><%= activity.description.presence || 'Sin descripción cargada.' %></p>
+      <div class="admin-capacity-row"><span>Ocupación</span><strong><%= enrolled %> / <%= capacity %></strong></div>
+      <div class="admin-progress"><span style="width: <%= occupancy %>%"></span></div>
+      <details class="admin-enrolled-list">
+        <summary>Ver socios inscriptos <span><%= enrolled %></span></summary>
+        <% if activity.enrollments.any? %>
+          <ul>
+            <% activity.enrollments.each do |enrollment| %>
+              <% profile = enrollment.member_profile %>
+              <li><strong><%= profile.first_name %> <%= profile.last_name %></strong><small><%= profile.member_number %> · <%= profile.user.email %></small></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="admin-empty-inline">Todavía no hay socios inscriptos.</p>
+        <% end %>
+      </details>
+    </article>
+  <% end %>
+</div>

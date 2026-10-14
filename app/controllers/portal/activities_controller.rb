@@ -1,19 +1,19 @@
 class Portal::ActivitiesController < ApplicationController
   def index
-    # Muestra las actividades activas en las que el socio aún no está inscripto
-    @available_activities = Activity.where(active: true) - current_user.member_profile.activities
+    # Solo ofrece actividades activas, con cupo y aún no elegidas por el socio.
+    @available_activities = Activity.where(active: true).includes(:enrollments) - current_user.member_profile.activities
   end
 
   def enroll
     activity = Activity.find(params[:id])
     perfil = current_user.member_profile
 
-    # 1. Inscribir al socio en la actividad
-    Enrollment.create!(
-      member_profile: perfil,
-      activity: activity,
-      start_date: Date.today
-    )
+    # Bloquea la actividad mientras verifica el cupo para evitar sobreinscripciones concurrentes.
+    activity.with_lock do
+      raise ActiveRecord::RecordInvalid.new(activity) unless activity.active? && activity.available_spots.positive?
+
+      Enrollment.create!(member_profile: perfil, activity: activity, start_date: Date.current, active: true)
+    end
 
     # 2. Lógica de facturación
     cuota_pendiente = perfil.membership_fees.find_by(status: "pending")
@@ -31,6 +31,9 @@ class Portal::ActivitiesController < ApplicationController
       )
     end
 
+    EnrollmentMailer.confirmation(perfil.enrollments.find_by!(activity: activity)).deliver_now
     redirect_to portal_dashboard_path, status: :see_other, notice: "Te inscribiste en #{activity.name}. Tu estado de cuenta fue actualizado."
+  rescue ActiveRecord::RecordInvalid => error
+    redirect_to portal_activities_path, status: :see_other, alert: error.record.errors.full_messages.to_sentence.presence || "La actividad ya no está disponible o no tiene cupos."
   end
 end

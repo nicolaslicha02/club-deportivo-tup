@@ -17,6 +17,8 @@ class RegistrationsController < ApplicationController
         status: "pending"
       )
 
+      EnrollmentMailer.welcome(@user).deliver_now
+
       session[:user_id] = @user.id
       redirect_to portal_dashboard_path, status: :see_other, notice: "¡Cuenta creada con éxito! Bienvenido al Club."
     else

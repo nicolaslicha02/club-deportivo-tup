@@ -28,6 +28,15 @@
               <span class="badge bg-secondary rounded-pill">$<%= activity.monthly_fee %></span>
             </li>
           <% end %>
+        <% elsif @fees_under_review.any? %>
+          <div class="alert alert-info mb-0">
+            <strong>Comprobantes en revisión.</strong> Te avisaremos cuando el club confirme el pago.
+            <ul class="mb-0 mt-2">
+              <% @fees_under_review.each do |fee| %>
+                <li>Cuota con vencimiento <%= fee.due_date.strftime("%d/%m/%Y") if fee.due_date %></li>
+              <% end %>
+            </ul>
+          </div>
         <% else %>
           <li class="list-group-item text-muted">No estás inscripto en ninguna actividad.</li>
         <% end %>
@@ -49,12 +58,18 @@
           <% @pending_fees.each do |fee| %>
             <%= form_with(model: fee, url: portal_membership_fee_path(fee), method: :patch, local: true, html: { multipart: true }) do |f| %>
               <div class="mb-3 p-3 bg-light rounded border">
+                <% if fee.rejected? %>
+                  <div class="alert alert-danger py-2 small">
+                    <strong>Comprobante rechazado.</strong> <%= fee.review_note %>
+                    <div class="mt-1">Subí una versión corregida para que podamos revisarlo otra vez.</div>
+                  </div>
+                <% end %>
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <span>Vencimiento: <strong><%= fee.due_date.strftime("%d/%m/%Y") if fee.due_date %></strong></span>
                   <span class="fs-5 fw-bold text-danger">$<%= fee.amount %></span>
                 </div>
                 <%= f.file_field :receipt, class: "form-control form-control-sm mb-2", required: true, accept: "image/png, image/jpeg, application/pdf" %>
-                <%= f.submit "Subir Comprobante y Abonar", class: "btn btn-sm btn-success w-100" %>
+                <%= f.submit(fee.rejected? ? "Reenviar comprobante" : "Enviar comprobante para revisión", class: "btn btn-sm btn-success w-100") %>
               </div>
             <% end %>
           <% end %>

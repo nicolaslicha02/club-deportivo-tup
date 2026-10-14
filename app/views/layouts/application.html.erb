@@ -23,26 +23,21 @@
 
   <body>
     <% if request.path.start_with?('/admin') && request.path != '/admin/login' %>
-      <!-- Barra de Administrador -->
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="/admin">Panel Admin</a>
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item">
-                <%= link_to "Actividades", admin_activities_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Socios", admin_member_profiles_path, class: "nav-link" %>
-              </li>
-              <li class="nav-item">
-                <%= link_to "Cobro de Cuotas", admin_membership_fees_path, class: "nav-link" %>
-              </li>
-            </ul>
-            <div class="d-flex align-items-center">
-              <%= link_to "⚙️ Configuración", edit_admin_club_setting_path, class: "nav-link text-warning me-3 fw-bold" %>
-              <%= button_to "Cerrar Sesión", logout_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
-            </div>
+      <nav class="admin-navbar">
+        <div class="admin-navbar-inner">
+          <%= link_to admin_root_path, class: "admin-brand" do %>
+            <span class="admin-brand-mark">CD</span>
+            <span><strong>Club Deportivo</strong><small>Administración</small></span>
+          <% end %>
+          <div class="admin-nav-links">
+            <%= link_to "Actividades", admin_activities_path, class: (request.path.start_with?(admin_activities_path) ? "active" : nil) %>
+            <%= link_to "Socios", admin_member_profiles_path, class: (request.path.start_with?(admin_member_profiles_path) ? "active" : nil) %>
+            <%= link_to "Cuotas y pagos", admin_membership_fees_path, class: (request.path.start_with?(admin_membership_fees_path) ? "active" : nil) %>
+            <%= link_to "Configuración", edit_admin_club_setting_path, class: (request.path.start_with?(edit_admin_club_setting_path) ? "active" : nil) %>
+          </div>
+          <div class="admin-nav-account">
+            <span><%= current_admin&.email %></span>
+            <%= button_to "Salir", admin_logout_path, method: :delete, class: "btn btn-sm btn-outline-light" %>
           </div>
         </div>
       </nav>
@@ -71,7 +66,7 @@
       </nav>
     <% end %>
 
-    <div class="container mt-4">
+    <main class="<%= request.path.start_with?('/admin') && request.path != '/admin/login' ? 'container-fluid admin-main' : 'container mt-4' %>">
       <!-- Sistema de mensajes flash globales -->
       <% if flash[:notice] %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -88,6 +83,6 @@
       <% end %>
 
       <%= yield %>
-    </div>
+    </main>
   </body>
 </html>

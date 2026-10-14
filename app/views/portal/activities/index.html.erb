@@ -9,6 +9,7 @@
             <h5 class="card-title"><%= activity.name %></h5>
             <p class="card-text text-muted small"><%= activity.description %></p>
             <p class="card-text fw-bold">Costo adicional: $<%= activity.monthly_fee %></p>
+            <p class="card-text"><%= activity.available_spots %> cupos disponibles</p>
           </div>
           <div class="card-footer bg-white border-0">
             <%= button_to "Inscribirme", enroll_portal_activity_path(activity), method: :post, class: "btn btn-primary w-100", data: { turbo: false } %>

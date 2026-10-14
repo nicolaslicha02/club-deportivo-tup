@@ -1,68 +1,79 @@
 # Club Deportivo - Sistema de Gestión
 
-Una aplicación web desarrollada en Ruby on Rails diseñada para administrar las operaciones diarias de un club deportivo. El sistema permite gestionar actividades, socios y el cobro de cuotas mensuales a través de dos interfaces principales: un panel de administración y un portal de autogestión para los miembros.
+Aplicación web desarrollada con Ruby on Rails para administrar socios, actividades deportivas, inscripciones y cuotas mensuales. Incluye un panel de administración y un portal de autogestión para los socios.
 
-## Características Principales
+## Funcionalidades
 
-*   **Autenticación y Roles:** Sistema de inicio de sesión unificado con redirección inteligente basada en roles (Administrador y Socio).
-*   **Panel de Administración:**
-    *   Gestión de actividades deportivas (creación, edición y asignación de cupos).
-    *   Visualización del padrón de socios.
-    *   Control y verificación de pagos: revisión de comprobantes adjuntados y aprobación o rechazo de cuotas.
-*   **Portal de Autogestión (Socios):**
-    *   Visualización de datos personales y número de socio autogenerado.
-    *   Inscripción a nuevas disciplinas deportivas con actualización automática del estado de cuenta.
-    *   Panel de facturación para visualizar cuotas pendientes y subir comprobantes de pago (imágenes/PDF).
-*   **Configuración Global:** Manejo dinámico del valor de la cuota base del club.
+### Panel de administración
 
-## Tecnologías Utilizadas
+- Consulta de actividades, cupos disponibles y socios inscriptos.
+- Consulta del padrón de socios.
+- Revisión de comprobantes de pago con estados claros: esperando pago, a revisar, aprobada y rechazada.
+- Al rechazar un comprobante, el administrador debe indicar el motivo. El socio puede corregirlo y volver a enviarlo.
+- Configuración del valor base de la cuota del club.
 
-*   **Backend:** Ruby on Rails 7
-*   **Base de Datos:** SQLite3
-*   **Frontend:** HTML5, CSS3, Bootstrap 5.3
-*   **Interacciones:** Turbo (Hotwire) para navegación fluida y ActiveStorage para el manejo de archivos.
+### Portal de socios
 
-## Instalación y Configuración Local
+- Consulta de datos personales y número de socio.
+- Inscripción a actividades activas con cupo disponible.
+- Consulta de cuotas y envío de comprobantes de pago.
+- Avisos por correo al registrarse, inscribirse en una actividad y recibir una resolución sobre un pago.
 
-Para correr este proyecto en tu entorno local, asegurate de tener instalado Ruby y Rails, y seguí estos pasos:
+## Tecnologías
 
-1.  **Clonar el repositorio:**
-    ```bash
-    git clone [https://github.com/TU-USUARIO/club-deportivo-tup.git](https://github.com/TU-USUARIO/club-deportivo-tup.git)
-    cd club-deportivo-tup
-    ```
+- Ruby on Rails
+- SQLite3
+- HTML, CSS y Bootstrap 5
+- Turbo y Active Storage
+- Action Mailer
 
-2.  **Instalar las dependencias:**
-    ```bash
-    bundle install
-    ```
+## Instalación local
 
-3.  **Preparar la base de datos:**
-    Este comando creará la base de datos, ejecutará las migraciones y cargará los datos de prueba iniciales (semillas):
-    ```bash
-    rails db:setup
-    ```
+Se requiere Ruby y Bundler instalados. Desde la carpeta del proyecto:
 
-4.  **Iniciar el servidor local:**
-    ```bash
-    rails server
-    ```
-    El sistema estará disponible en `http://localhost:3000`.
+```powershell
+bundle install
+bundle exec ruby .\bin\rails db:prepare
+bundle exec ruby .\bin\rails server
+```
 
-## Credenciales de Prueba
+Luego abrir `http://localhost:3000`.
 
-La base de datos se inicializa con dos usuarios predeterminados para probar los distintos roles del sistema:
+## Correo electrónico
 
-**Administrador:**
-*   **Email:** `admin@club.com`
-*   **Contraseña:** `password123`
+En producción, configura estas variables de entorno con los datos de tu proveedor SMTP:
 
-**Socio (Portal de autogestión):**
-*   **Email:** `socio@club.com`
-*   **Contraseña:** `password123`
+- `SMTP_ADDRESS`
+- `SMTP_PORT` (por defecto `587`)
+- `SMTP_DOMAIN` (por defecto usa `SMTP_ADDRESS`)
+- `SMTP_USERNAME`
+- `SMTP_PASSWORD`
+- `MAILER_FROM` (por defecto `no-reply@clubdeportivo.com`)
+
+## Pruebas
+
+Ejecuta la suite con:
+
+```powershell
+bundle exec ruby .\bin\rails test
+```
+
+Si Rails informa que faltan migraciones, prepara la base de datos con `bundle exec ruby .\bin\rails db:prepare`.
+
+## Credenciales de prueba
+
+Si las semillas crean estos usuarios, puedes iniciar sesión con:
+
+**Administrador**
+
+- Email: `admin@club.com`
+- Contraseña: `password123`
+
+**Socio**
+
+- Email: `socio@club.com`
+- Contraseña: `password123`
 
 ## Autor
 
-**Máximo Nicolás Licha**  
-Proyecto desarrollado en el marco de la Tecnicatura Universitaria en Programación (TUP)  
-Universidad Tecnológica Nacional Facultad Regional La Plata (UTN FRLP)
+Máximo Nicolás Licha — Tecnicatura Universitaria en Programación (TUP), UTN Facultad Regional La Plata.
